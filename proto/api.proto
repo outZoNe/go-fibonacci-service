@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "pb;fibonacciGrpc";
+
+import "google/api/annotations.proto";
+
+message FibonacciRequest {
+  int32 startNum = 1;
+  int32 endNum = 5;
+}
+
+message FibonacciResponse {
+  string res = 1;
+}
+
+service Fibonacci {
+  rpc GetFibonacci(FibonacciRequest) returns (FibonacciResponse) {}
+  rpc Echo(FibonacciRequest) returns (FibonacciResponse) {
+    option (google.api.http) = {
+      get: "/fibonacci"
+    };
+  }
+}
