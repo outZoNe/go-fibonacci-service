@@ -5,6 +5,6 @@
 3) Запустить gRPC модуль: `go run main.go` либо собрать и запустить бинарник: `go build main.go && ./<bin_file>`
 4) Запустить gRPC-Gateway модуль для работы по http: `go run proxy.go` либо собрать и запустить
    бинарник: `go build proxy.go && ./<bin_file>`
-5) Проверить работу RESTful можно через (https://www.postman.com/downloads/)[Postman] либо
+5) Проверить работу RESTful можно через [Postman](https://www.postman.com/downloads/) либо
    тут: [http://127.0.0.1:8080/fibonacci?startNum=5&endNum=10](http://127.0.0.1:8080/fibonacci?startNum=5&endNum=10)
 6) Для проверки gRPC можно использовать клиент: [BloomRPC](https://github.com/uw-labs/bloomrpc/releases)
