@@ -3,7 +3,6 @@ package fibonacci
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
 	"github.com/outZoNe/go-fibonacci-service/lib/fibonacci"
 	rs "github.com/outZoNe/go-fibonacci-service/lib/redis"
 	fibonacciGrpc "github.com/outZoNe/go-fibonacci-service/pkg/api/proto"
@@ -33,21 +32,32 @@ func getResponseJson(x int32, y int32) string {
 	for x <= y {
 		// Проверяем есть ли число в редисе, если есть, то вернем его, если нет, то будем вычислять его
 		val, err := rs.Client().Get(ctx, strconv.Itoa(int(x))).Result()
-		if val != "" && err != redis.Nil && err != nil {
+		if err != nil {
+			return returnError(err)
+		}
+		if val != "" {
 			fibVal, _ := strconv.Atoi(val)
 			fibiArr[count] = fibonacci.JsonFibElem{SerialNumber: int(x), Value: fibVal}
 		} else {
 			var fibVal = fibonacci.GetSerialFibNum(int(x))
 			fibiArr[count] = fibonacci.JsonFibElem{SerialNumber: int(x), Value: fibVal}
 			err := rs.Client().Set(ctx, strconv.Itoa(int(x)), strconv.Itoa(fibVal), 0).Err()
-			if err != redis.Nil && err != nil {
-				panic(err)
+			if err != nil {
+				return returnError(err)
 			}
 		}
 		x++
 		count++
 	}
 	jsonString, err := json.Marshal(fibiArr)
+	if err != nil {
+		return returnError(err)
+	}
+	return string(jsonString)
+}
+
+func returnError(err error) string {
+	jsonString, err := json.Marshal(err)
 	if err != nil {
 		log.Fatal(err)
 	}
